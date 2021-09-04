@@ -9,31 +9,9 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 )
-
-// Checks the domain and returns the certificate ARN
-func checkCertificate(awsConfig aws.Config, ctx context.Context, domain string) string {
-	client := acm.NewFromConfig(awsConfig)
-
-	certificates, err := client.ListCertificates(ctx, nil)
-
-	if err != nil {
-		panic(err)
-	}
-
-	var certArn string
-
-	for _, cert := range certificates.CertificateSummaryList {
-		if *cert.DomainName == domain {
-			certArn = *cert.CertificateArn
-		}
-	}
-
-	return certArn
-}
 
 // Retrieves the domain hosted zone
 func getHostedZoneId(awsConfig aws.Config, ctx context.Context, domain string) (Id string, err error) {
