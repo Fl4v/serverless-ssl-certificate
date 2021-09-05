@@ -12,7 +12,7 @@ import (
 )
 
 // Retrieves the domain hosted zone
-func getHostedZoneId(awsConfig aws.Config, ctx context.Context, domain string) (Id string, err error) {
+func GetHostedZoneId(awsConfig aws.Config, ctx context.Context, domain string) (Id string, err error) {
 	client := route53.NewFromConfig(awsConfig)
 
 	params := &route53.ListHostedZonesInput{}
@@ -40,7 +40,7 @@ func getHostedZoneId(awsConfig aws.Config, ctx context.Context, domain string) (
 
 // Creates or updates the acme record
 // If the env variable HOSTED_ZONE_ID is not set, it will try and look for it based on the domain name
-func upsertRecord(awsConfig aws.Config, ctx context.Context, domain string, txtValue string) string {
+func UpsertRecord(awsConfig aws.Config, ctx context.Context, domain string, txtValue string) string {
 
 	var hostedZoneId string
 	var recordName string = "_acme-challenge." + domain
@@ -51,7 +51,7 @@ func upsertRecord(awsConfig aws.Config, ctx context.Context, domain string, txtV
 	hostedZoneId = os.Getenv("HOSTED_ZONE_ID")
 
 	if hostedZoneId == "" {
-		hostedZoneId, err = getHostedZoneId(awsConfig, ctx, domain)
+		hostedZoneId, err = GetHostedZoneId(awsConfig, ctx, domain)
 
 		if err != nil {
 			panic(err)
