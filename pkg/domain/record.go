@@ -1,14 +1,12 @@
-package main
+package domain
 
 import (
 	"context"
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 )
@@ -42,7 +40,7 @@ func getHostedZoneId(awsConfig aws.Config, ctx context.Context, domain string) (
 
 // Creates or updates the acme record
 // If the env variable HOSTED_ZONE_ID is not set, it will try and look for it based on the domain name
-func upsertAcmeRecord(awsConfig aws.Config, ctx context.Context, domain string, txtValue string) string {
+func upsertRecord(awsConfig aws.Config, ctx context.Context, domain string, txtValue string) string {
 
 	var hostedZoneId string
 	var recordName string = "_acme-challenge." + domain
@@ -97,22 +95,22 @@ func upsertAcmeRecord(awsConfig aws.Config, ctx context.Context, domain string, 
 	return *resp.ChangeInfo.Id
 }
 
-func main() {
+// func main() {
 
-	ctx := context.TODO()
+// 	ctx := context.TODO()
 
-	// Load default config from ~/.aws/config
-	awsConfig, err := config.LoadDefaultConfig(ctx)
+// 	// Load default config from ~/.aws/config
+// 	awsConfig, err := config.LoadDefaultConfig(ctx)
 
-	if err != nil {
-		panic(err)
-	}
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	domain := os.Getenv("CERTBOT_DOMAIN")
-	token := os.Getenv("CERTBOT_VALIDATION")
+// 	domain := os.Getenv("CERTBOT_DOMAIN")
+// 	token := os.Getenv("CERTBOT_VALIDATION")
 
-	upsertAcmeRecord(awsConfig, ctx, domain, token)
+// 	upsertAcmeRecord(awsConfig, ctx, domain, token)
 
-	// Wait N seconds for DNS propagation
-	time.Sleep(10 * time.Second)
-}
+// 	// Wait N seconds for DNS propagation
+// 	time.Sleep(10 * time.Second)
+// }
